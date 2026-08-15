@@ -1,0 +1,20 @@
+<html> 
+ <head>
+   <title> hi </title>
+ </head>
+ <body> 
+ <h1> Hi </h1>
+ <script> 
+
+  addEventListener ('load' , async (e) => {
+    const request = await fetch( '/api/info')
+    const json = await request.json()
+    const user = await json['user']	  
+    const claim = await json ['claim']
+    document.getElementById('m').innerHTML = 'hello, ' + user + ', with claim ' + claim
+  } )
+ </script>
+
+  <div id="m"></div> 
+ </body>
+</html>
