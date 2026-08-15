@@ -14,11 +14,6 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 
 import javax.sql.DataSource;
 
-// request-based authorization
-// method-based authorization
-
-//@EnableMethodSecurity
-//@EnableMultiFactorAuthentication(authorities = {})
 @SpringBootApplication
 public class AuthApplication {
 
@@ -67,23 +62,3 @@ public class AuthApplication {
     }
 
 }
-
-//
-/// / SecurityFilterChains -> AuthenticationManager -> 0...N AuthenticationProviders .. (DaoAuthenticationProvider -> UserDetailsService)
-/// / SecurityFilterChains -> AuthorizationManager
-//
-//@Controller
-//@ResponseBody
-//class MeController {
-//
-//
-//    @GetMapping("/admin")
-//    Map<String, String> admin(Principal principal) {
-//        return Map.of("admin", principal.getName());
-//    }
-//
-//    @GetMapping("/")
-//    Map<String, String> me(Principal principal) {
-//        return Map.of("user", principal.getName());
-//    }
-//}
