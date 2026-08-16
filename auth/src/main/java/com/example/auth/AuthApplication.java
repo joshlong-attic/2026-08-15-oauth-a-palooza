@@ -1,9 +1,11 @@
 package com.example.auth;
 
+import io.arconia.multitenancy.details.jdbc.JdbcTenantDetailsService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
+import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -34,13 +36,22 @@ public class AuthApplication {
     }
 
     @Bean
-    OAuth2TokenCustomizer<JwtEncodingContext> jwtEncodingContextOAuth2TokenCustomizer() {
+    JdbcTenantDetailsService jdbcTenantDetailsService(DataSource dataSource) {
+        return JdbcTenantDetailsService.builder().dataSource(dataSource).build();
+    }
+
+    @Bean
+    OAuth2TokenCustomizer<JwtEncodingContext> jwtEncodingContextOAuth2TokenCustomizer(
+            DataSource dataSource
+    ) {
         return context -> {
+            var db = JdbcClient.create(dataSource);
             var authenticatedUserName = context.getPrincipal().getName();
-            IO.println("authenticatedUserName: " + authenticatedUserName);
-            context.getClaims().claim("bestLuke", "shannon");
-            context.getClaims().claim("tier", "gold");
-            context.getClaims().claim("az", "us-east-1");
+            var tenantForUser = db.sql("select * from users_tenant_details where users_username = ?")
+                    .params(authenticatedUserName)
+                    .query((rs, rowNum) -> rs.getString("tenant_details_identifier"))
+                    .single();
+            context.getClaims().claim("tenant", tenantForUser);
         };
     }
 

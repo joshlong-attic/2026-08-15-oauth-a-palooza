@@ -1,5 +1,6 @@
 package com.example.gateway;
 
+import io.arconia.multitenancy.web.context.resolvers.OAuth2TenantResolver;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.gateway.server.mvc.filter.BeforeFilterFunctions;
@@ -20,6 +21,11 @@ public class GatewayApplication {
         SpringApplication.run(GatewayApplication.class, args);
     }
 
+
+    @Bean
+    OAuth2TenantResolver oAuth2TenantResolver() {
+        return OAuth2TenantResolver.builder().tenantClaimName("tenant").build();
+    }
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)

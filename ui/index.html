@@ -10,7 +10,7 @@
     const request = await fetch( '/api/info')
     const json = await request.json()
     const user = await json['user']	  
-    const claim = await json ['claim']
+    const claim = await json ['tenant']
     document.getElementById('m').innerHTML = 'hello, ' + user + ', with claim ' + claim
   } )
  </script>
